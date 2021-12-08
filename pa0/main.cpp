@@ -44,5 +44,15 @@ int main(){
     // matrix multiply i * j
     // matrix multiply vector i * v
 
+    // transformation
+    Eigen::Vector3f p(2.0f, 1.0f, 1.0f);
+    std::cout << "Vector p:\n"<< p << std::endl;
+    Eigen::Matrix3f trans = Eigen::Matrix3f::Identity();
+    std::cout << "Init transformation matrix:\n"<< trans << std::endl;
+    trans << std::cos(45.0 / 180.0 * std::acos(-1)), -std::sin(45.0 / 180.0 * std::acos(-1)), 1.0f,
+    std::sin(45.0 / 180.0 * std::acos(-1)), std::cos(45.0 / 180.0 * std::acos(-1)), 2.0f,
+    0.0f, 0.0f, 1.0f;
+    std::cout << "Transformation matrix:\n"<< trans << std::endl;
+    std::cout << "Rotate 45 degrees counterclockwise and translate(1, 2):\n" << trans * p << std::endl;
     return 0;
 }
