@@ -1,24 +1,25 @@
-#include<cmath>
-#include<eigen3/Eigen/Core>
-#include<eigen3/Eigen/Dense>
-#include<iostream>
+#include <cmath>
+#include <eigen3/Eigen/Core>
+#include <eigen3/Eigen/Dense>
+#include <iostream>
 
-int main(){
+int main()
+{
 
     // Basic Example of cpp
     std::cout << "Example of cpp \n";
     float a = 1.0, b = 2.0;
     std::cout << a << std::endl;
-    std::cout << a/b << std::endl;
+    std::cout << a / b << std::endl;
     std::cout << std::sqrt(b) << std::endl;
     std::cout << std::acos(-1) << std::endl;
-    std::cout << std::sin(30.0/180.0*acos(-1)) << std::endl;
+    std::cout << std::sin(30.0 / 180.0 * acos(-1)) << std::endl;
 
     // Example of vector
     std::cout << "Example of vector \n";
     // vector definition
-    Eigen::Vector3f v(1.0f,2.0f,3.0f);
-    Eigen::Vector3f w(1.0f,0.0f,0.0f);
+    Eigen::Vector3f v(1.0f, 2.0f, 3.0f);
+    Eigen::Vector3f w(1.0f, 0.0f, 0.0f);
     // vector output
     std::cout << "Example of output \n";
     std::cout << v << std::endl;
@@ -33,7 +34,7 @@ int main(){
     // Example of matrix
     std::cout << "Example of matrix \n";
     // matrix definition
-    Eigen::Matrix3f i,j;
+    Eigen::Matrix3f i, j;
     i << 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0;
     j << 2.0, 3.0, 1.0, 4.0, 6.0, 5.0, 9.0, 7.0, 8.0;
     // matrix output
@@ -46,13 +47,17 @@ int main(){
 
     // transformation
     Eigen::Vector3f p(2.0f, 1.0f, 1.0f);
-    std::cout << "Vector p:\n"<< p << std::endl;
+    std::cout << "Vector p:\n"
+              << p << std::endl;
     Eigen::Matrix3f trans = Eigen::Matrix3f::Identity();
-    std::cout << "Init transformation matrix:\n"<< trans << std::endl;
+    std::cout << "Init transformation matrix:\n"
+              << trans << std::endl;
     trans << std::cos(45.0 / 180.0 * std::acos(-1)), -std::sin(45.0 / 180.0 * std::acos(-1)), 1.0f,
-    std::sin(45.0 / 180.0 * std::acos(-1)), std::cos(45.0 / 180.0 * std::acos(-1)), 2.0f,
-    0.0f, 0.0f, 1.0f;
-    std::cout << "Transformation matrix:\n"<< trans << std::endl;
-    std::cout << "Rotate 45 degrees counterclockwise and translate(1, 2):\n" << trans * p << std::endl;
+        std::sin(45.0 / 180.0 * std::acos(-1)), std::cos(45.0 / 180.0 * std::acos(-1)), 2.0f,
+        0.0f, 0.0f, 1.0f;
+    std::cout << "Transformation matrix:\n"
+              << trans << std::endl;
+    std::cout << "Rotate 45 degrees counterclockwise and translate(1, 2):\n"
+              << trans * p << std::endl;
     return 0;
 }
