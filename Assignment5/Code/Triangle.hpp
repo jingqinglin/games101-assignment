@@ -11,6 +11,23 @@ bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1, const Vector3f
     // that's specified bt v0, v1 and v2 intersects with the ray (whose
     // origin is *orig* and direction is *dir*)
     // Also don't forget to update tnear, u and v.
+
+    // Use Moller-Trumbore Algorithm, the solution of the equation is on pdf 13-29
+    Vector3f e1 = v1 - v0;
+    Vector3f e2 = v2 - v0;
+    Vector3f s = orig - v0;
+    Vector3f s1 = crossProduct(dir, e2);
+    Vector3f s2 = crossProduct(s, e1);
+
+    Vector3f solution = Vector3f(dotProduct(s2, e2), dotProduct(s1, s), dotProduct(s2, dir)) / dotProduct(s1, e1);
+    tnear = solution.x;
+    u = solution.y;
+    v = solution.z;
+
+    if (tnear >= 0.0f && u >= 0.0f && v >= 0.0f && (1.0f - u - v) >= 0.0f)
+    {
+        return true;
+    }
     return false;
 }
 

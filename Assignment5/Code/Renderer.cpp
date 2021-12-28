@@ -230,7 +230,17 @@ void Renderer::Render(const Scene& scene)
             // Also, don't forget to multiply both of them with the variable *scale*, and
             // x (horizontal) variable with the *imageAspectRatio*            
 
+            // Screen space -> NDC, which is (-1, -1, -1) to (1, 1, 1)
+            x = 2 * ((float)i / scene.width - 0.5); 
+            y = 2 * ((float)(scene.height - 1 - j) / scene.height - 0.5); // (0, 0) in the upper left corner
+            // NDC -> world space, camera is at the origin
+            // In world space, near plane is imaging plane（成像平面）
+            // near plane's |z| == 1, so scale = 1 * tan(fov/2)
+            x *= scale * imageAspectRatio;
+            y *= scale;
+
             Vector3f dir = Vector3f(x, y, -1); // Don't forget to normalize this direction!
+            normalize(dir);
             framebuffer[m++] = castRay(eye_pos, dir, scene, 0);
         }
         UpdateProgress(j / (float)scene.height);
