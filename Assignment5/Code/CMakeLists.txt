@@ -9,4 +9,3 @@ if(UNIX AND NOT APPLE)
     target_compile_features(RayTracing PUBLIC cxx_std_17)
     target_link_libraries(RayTracing PUBLIC -fsanitize=undefined)
 endif()
-
