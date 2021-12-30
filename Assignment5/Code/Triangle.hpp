@@ -15,20 +15,40 @@ bool rayTriangleIntersect(const Vector3f& v0, const Vector3f& v1, const Vector3f
     // Use Moller-Trumbore Algorithm, the solution of the equation is on pdf 13-29
     Vector3f e1 = v1 - v0;
     Vector3f e2 = v2 - v0;
-    Vector3f s = orig - v0;
     Vector3f s1 = crossProduct(dir, e2);
-    Vector3f s2 = crossProduct(s, e1);
 
-    Vector3f solution = Vector3f(dotProduct(s2, e2), dotProduct(s1, s), dotProduct(s2, dir)) / dotProduct(s1, e1);
-    tnear = solution.x;
-    u = solution.y;
-    v = solution.z;
-
-    if (tnear >= 0.0f && u >= 0.0f && v >= 0.0f && (1.0f - u - v) >= 0.0f)
+    float det = dotProduct(e1, s1);
+    if (det <= 0)
     {
-        return true;
+        return false;
     }
-    return false;
+
+    Vector3f s = orig - v0;
+    u = dotProduct(s1, s);
+    if (u < 0 || u > det)
+    {
+        return false;
+    }
+
+    Vector3f s2 = crossProduct(s, e1);
+    v = dotProduct(s2, dir);
+    if (v < 0 || v + u > det)
+    {
+        return false;
+    }
+
+    tnear = dotProduct(e2, s2);
+    if (tnear < 0)
+    {
+        return false;
+    }
+
+    float invDet = 1 / det;
+    tnear *= invDet;
+    u *= invDet;
+    v *= invDet;
+    
+    return true;
 }
 
 class MeshTriangle : public Object
