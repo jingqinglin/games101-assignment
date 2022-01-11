@@ -253,6 +253,21 @@ inline Intersection Triangle::getIntersection(Ray ray)
     t_tmp = dotProduct(e2, qvec) * det_inv;
 
     // TODO find ray triangle intersection
+    // Paste from assignment 6
+    // Refer to Sphere.hpp
+    if (t_tmp < 0)
+    {
+        return inter;
+    }
+    inter.happened = true;
+    inter.coords = ray(t_tmp);
+    inter.normal = this->normal;
+    inter.distance = t_tmp;
+    inter.obj = this;
+    inter.m = this->m;
+    // New code
+    // Used to check wether the shading point is a light source
+    inter.emit = this->m->m_emission;
 
     return inter;
 }
