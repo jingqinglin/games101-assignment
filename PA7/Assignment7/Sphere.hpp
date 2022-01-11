@@ -64,6 +64,9 @@ public:
         result.m = this->m;
         result.obj = this;
         result.distance = t0;
+        // Used to check wether the shading point is a light source
+        result.emit = this->m->m_emission;
+
         return result;
 
     }
