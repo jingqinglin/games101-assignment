@@ -1,4 +1,4 @@
-# Assignment Backup for Games 101
+# GAMES 101 作业
 
 - 课程 BBS: http://games-cn.org/forums/forum/graphics-intro/
 - 作业发布页：http://games-cn.org/forums/topic/allhw/
@@ -11,4 +11,3 @@
 Windows 下运行的注意点：
 1. 使用 `mingw32-make` 来执行 makefile
 2. CMakeLists.txt 中需添加 Windows 上 Eigen 的包含目录
-
