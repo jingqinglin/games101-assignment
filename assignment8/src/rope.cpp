@@ -7,16 +7,35 @@
 #include "rope.h"
 #include "spring.h"
 
+#define semiImplicitEuler 1
+
 namespace CGL {
 
     Rope::Rope(Vector2D start, Vector2D end, int num_nodes, float node_mass, float k, vector<int> pinned_nodes)
     {
         // TODO (Part 1): Create a rope starting at `start`, ending at `end`, and containing `num_nodes` nodes.
 
-//        Comment-in this part when you implement the constructor
-//        for (auto &i : pinned_nodes) {
-//            masses[i]->pinned = true;
-//        }
+        // Comment-in this part when you implement the constructor
+        Mass* a = nullptr;
+        Mass* b = nullptr;
+        Vector2D mass_pos = start;
+        Vector2D pos_step = (end - start) / (num_nodes - 1.0);
+        for (int i = 0; i < num_nodes; ++i)
+        {
+            a = new Mass(mass_pos, node_mass, false);
+            masses.push_back(a);
+            if (b)
+            {
+                springs.push_back(new Spring(a, b, k));
+            }
+            mass_pos += pos_step;
+            b = a;
+        }
+        // Whether the i-th mass point is pinned
+        for (auto &i : pinned_nodes)
+        {
+            masses[i]->pinned = true;
+        }
     }
 
     void Rope::simulateEuler(float delta_t, Vector2D gravity)
@@ -24,6 +43,12 @@ namespace CGL {
         for (auto &s : springs)
         {
             // TODO (Part 2): Use Hooke's law to calculate the force on a node
+            Vector2D vec_ab = s->m2->position - s->m1->position;
+            double s_length = vec_ab.norm();
+            Vector2D unit_vec_ab = vec_ab / s_length;
+            Vector2D f = s->k * unit_vec_ab * (s_length - s->rest_length);
+            s->m1->forces += f;
+            s->m2->forces += -f;
         }
 
         for (auto &m : masses)
@@ -31,10 +56,23 @@ namespace CGL {
             if (!m->pinned)
             {
                 // TODO (Part 2): Add the force due to gravity, then compute the new velocity and position
-
+                m->forces += gravity * m->mass;
                 // TODO (Part 2): Add global damping
+                float global_damping = 0.002;
+                m->forces += -global_damping * m->velocity;
+                // F = ma;
+                Vector2D a = m->forces / m->mass;
+                if (semiImplicitEuler)
+                {
+                    m->velocity += a * delta_t;
+                    m->position += m->velocity * delta_t;
+                }
+                else
+                {
+                    m->position += m->velocity * delta_t;
+                    m->velocity += a * delta_t;
+                }
             }
-
             // Reset all forces on each mass
             m->forces = Vector2D(0, 0);
         }
@@ -45,6 +83,12 @@ namespace CGL {
         for (auto &s : springs)
         {
             // TODO (Part 3): Simulate one timestep of the rope using explicit Verlet （solving constraints)
+            Vector2D vec_ab = s->m2->position - s->m1->position;
+            double s_length = vec_ab.norm();
+            Vector2D unit_vec_ab = vec_ab / s_length;
+            Vector2D f = s->k * unit_vec_ab * (s_length - s->rest_length);
+            s->m1->forces += f;
+            s->m2->forces += -f;
         }
 
         for (auto &m : masses)
@@ -53,9 +97,15 @@ namespace CGL {
             {
                 Vector2D temp_position = m->position;
                 // TODO (Part 3.1): Set the new position of the rope mass
-                
+                m->forces += gravity * m->mass;
+                Vector2D a = m->forces / m->mass;
                 // TODO (Part 4): Add global Verlet damping
+                float damping_factor = 0.00005;
+                m->position = m->position + (1 - damping_factor) * (m->position - m->last_position) + a * delta_t * delta_t;
+                m->last_position = temp_position;
             }
+            // Reset all forces on each mass
+            m->forces = Vector2D(0, 0);
         }
     }
 }
